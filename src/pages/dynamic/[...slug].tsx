@@ -14,6 +14,7 @@ import { getCookie } from "cookies-next";
 import { Props as CodeBlockProps } from "@/components/CodeBlock";
 import { Props as InlineCodeProps } from "@/components/InlineCode";
 import { TallyButton } from "@/components/TallyButton";
+import { reconstructMarkdownWithFrontmatter } from "@/utils/markdown";
 
 const components: Record<string, React.ElementType> = {
   Collapse,
@@ -32,9 +33,11 @@ const components: Record<string, React.ElementType> = {
 export default function PostPage({
   page,
   colorModeSSR,
+  rawMarkdown,
 }: {
   page: Page;
   colorModeSSR: string | null;
+  rawMarkdown: string;
 }) {
   const MDXContent = useMDXComponent(page.body.code);
 
@@ -56,6 +59,7 @@ export default function PostPage({
         description: page.description,
         url: page.url,
       }}
+      rawMarkdown={rawMarkdown}
     >
       <MDXContent components={componentsWithProps} />
     </Layout>
@@ -67,9 +71,6 @@ export const getServerSideProps = async (
 ) => {
   const { slug } = context.params as { slug: string[] };
   const page = allPages.find(p => p.url === `/${slug.join("/")}`);
-  const themeCookie = getCookie("theme", { req: context.req }) as
-    | string
-    | undefined;
 
   if (!page) {
     return {
@@ -77,10 +78,27 @@ export const getServerSideProps = async (
     };
   }
 
+  // Return raw markdown if format=md
+  if (context.query.format === "md") {
+    const markdown = reconstructMarkdownWithFrontmatter(
+      { title: page.title, description: page.description, url: page.url },
+      page.body.raw
+    );
+    context.res.setHeader("Content-Type", "text/markdown; charset=utf-8");
+    context.res.write(markdown);
+    context.res.end();
+    return { props: {} };
+  }
+
+  const themeCookie = getCookie("theme", { req: context.req }) as
+    | string
+    | undefined;
+
   return {
     props: {
       page,
       colorModeSSR: themeCookie ?? null,
+      rawMarkdown: page.body.raw,
     },
   };
 };

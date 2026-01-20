@@ -92,6 +92,7 @@ export const sidebarContent: ISidebarContent = [
         pages: [
           makePage("Build Configuration", "guides"),
           makePage("Dockerfiles", "guides"),
+          makePage("Private Registries", "guides"),
         ],
       },
       {
@@ -101,6 +102,7 @@ export const sidebarContent: ISidebarContent = [
           makePage("Start Command", "guides"),
           makePage("Deployment Actions", "guides"),
           makePage("GitHub Autodeploys", "guides"),
+          makePage("Image Auto Updates", "guides"),
           makePage("Optimize Performance", "guides"),
           makePage("Healthchecks", "guides"),
           makePage("Restart Policy", "guides"),
@@ -214,10 +216,10 @@ export const sidebarContent: ISidebarContent = [
         ],
       },
       {
-        subTitle: "Gitlab",
+        subTitle: "GitLab",
         pages: [
           {
-            title: "Gitlab CI/CD with Railway",
+            title: "GitLab CI/CD with Railway",
             url: "https://blog.railway.com/p/gitlab-ci-cd",
           },
         ],
@@ -295,7 +297,9 @@ export const sidebarContent: ISidebarContent = [
           makePage("Priority Boarding", "reference"),
           makePage("Project Members", "reference"),
           makePage("Project Usage", "reference"),
+          makePage("Audit Logs", "reference", "reference/audit-logs"),
           makePage("SAML SSO", "reference", "reference/saml"),
+          makePage("Two-Factor Enforcement", "reference"),
           makePage("Support", "reference"),
           makePage("Teams", "reference"),
           makePage("Usage Limits", "reference"),
